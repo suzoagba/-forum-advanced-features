@@ -1,0 +1,39 @@
+{{ define "content" }}
+<div class="container">
+  <div class="login">
+    <h2>Login</h2>
+    {{ if .Error.Error }}
+    <p class="errorMessage">{{ .Error.Message }}</p>
+    {{ end }}
+    <h3>Choose your login method:</h3>
+    <ul id="registerOptions">
+      <li>
+        {{ if eq .OAuth.GoogleID "" }}
+        Google
+        {{ else }}
+        <a href="https://accounts.google.com/o/oauth2/auth?client_id={{ .OAuth.GoogleID }}&redirect_uri=http://localhost:8080/oauth/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email" onclick="toggleVisibility('loading')">Google</a>
+        {{ end }}
+      </li>
+      <li>
+        {{ if eq .OAuth.GoogleID "" }}
+        GitHub
+        {{ else }}
+        <a href="https://github.com/login/oauth/authorize?client_id={{ .OAuth.GitHubID }}&redirect_uri=http://localhost:8080/oauth/github&scope=user:email" onclick="toggleVisibility('loading')">GitHub</a>
+        {{ end }}
+      </li>
+      <li><a href="#" onclick="toggleVisibility('loginByUsername')">Username</a></li>
+    </ul>
+    <h3 id="loading">OAuth loading...</h3>
+    <form id="loginByUsername" action="/login" method="POST">
+      <label for="username">Username:</label>
+      <br>
+      <input type="text" id="username" name="username" placeholder="Username" autocomplete="username"{{ if .Error.Error }} value="{{ .Error.Field1 }}"{{ end }} required>
+      <br>
+      <label for="password">Password:</label>
+      <br>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</div>
+{{ end }}
