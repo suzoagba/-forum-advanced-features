@@ -18,6 +18,9 @@
             {{ end }}
             <ul>
                 {{ if .User.LoggedIn }}
+                <li><a href="/">Home</a></li>
+                <li><a href="/activity">My activity</a></li>
+                <li><a href="/notifications">Notifications</a></li>
                 <li><a href="/logout">Log out</a></li>
                 {{ else }}
                 <li><a href="/register">Register</a></li>

@@ -1,0 +1,10 @@
+{{ define "content" }}
+<div class="container">
+  <p><a href="/" class="backButton"><< Back to main page</a></p>
+  {{ if .User.LoggedIn }}
+  <p>Here will be your notifications.</p>
+  {{ else }}
+  <p class="errorMessage">You need to be logged in to see your notifications.</p>
+  {{ end }}
+</div>
+{{ end }}

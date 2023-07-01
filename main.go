@@ -42,6 +42,11 @@ func main() {
 	http.HandleFunc("/logout", user.LogoutHandler)
 	http.HandleFunc("/oauth/", user.OauthHandler(db))
 
+	http.HandleFunc("/activity/", pages.ActivityHandler(db))
+	http.HandleFunc("/notifications", pages.NotifyHandler(db))
+	http.HandleFunc("/edit/", pages.EditHandler(db))
+	http.HandleFunc("/delete/", pages.DeleteHandler(db))
+
 	// Handling assets
 	fs := http.FileServer(http.Dir("./assets"))
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))

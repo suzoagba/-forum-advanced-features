@@ -42,6 +42,20 @@ type Tag struct {
 	Name string
 }
 
+type CommentListing struct {
+	Post     Post
+	Comments []Comment
+}
+
+type Activity struct {
+	Posts           []Post
+	Comments        []CommentListing
+	PostLikes       []Post
+	PostDislikes    []Post
+	CommentLikes    []CommentListing
+	CommentDislikes []CommentListing
+}
+
 type ForPage struct {
 	Error    ErrorMessage
 	User     User
@@ -49,6 +63,7 @@ type ForPage struct {
 	Tags     []Tag
 	Comments []Comment
 	OAuth    OAuth
+	Activity Activity
 }
 
 type OAuth struct {

@@ -28,9 +28,17 @@ func RenderTemplates(page string, data interface{}, w http.ResponseWriter, r *ht
 	case "login":
 		link += "authentication/login.html"
 	case "createPost":
-		link += "createPost.html"
+		link += page + ".html"
 	case "viewPost":
-		link += "viewPost.html"
+		link += page + ".html"
+	case "activity":
+		link += page + ".html"
+	case "notify":
+		link += "notifications.html"
+	case "edit":
+		link += page + ".html"
+	case "delete":
+		link += page + ".html"
 	default:
 		ErrorHandler(w, http.StatusNotFound, "")
 		return
