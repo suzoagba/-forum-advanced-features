@@ -3,6 +3,7 @@ package pages
 import (
 	"database/sql"
 	"fmt"
+	"forum/database"
 	"forum/handlers"
 	"forum/structs"
 	"net/http"
@@ -203,59 +204,8 @@ func ViewPostHandler(db *sql.DB) http.HandlerFunc {
 			}
 		}
 
-		// Query the database to get the post information
-		postQuery := `
-			SELECT postID, title, description, imageFileName, creationDate, username, likes, dislikes
-			FROM posts
-			WHERE postID = ?
-		`
-
-		postRow := db.QueryRow(postQuery, postID)
-
-		var post structs.Post
-		var imageFileName sql.NullString
-		err := postRow.Scan(&post.ID, &post.Title, &post.Description, &imageFileName, &post.CreationDate, &post.Username, &post.Likes, &post.Dislikes)
-		if err != nil {
-			http.Error(w, "Failed to retrieve post", http.StatusInternalServerError)
-			return
-		}
-
-		if imageFileName.Valid {
-			post.ImageFileName = imageFileName.String
-		} else {
-			post.ImageFileName = "" // Set a default value for imageFileName when it is NULL
-		}
-
-		// Query the database to get the comments for the post
-		commentQuery := `
-			SELECT commentID, content, creationDate, username, likes, dislikes
-			FROM comments
-			WHERE postID = ?
-			ORDER BY creationDate ASC
-		`
-
-		commentRows, err := db.Query(commentQuery, postID)
-		if err != nil {
-			http.Error(w, "Failed to retrieve comments", http.StatusInternalServerError)
-			return
-		}
-		defer commentRows.Close()
-
-		comments := []structs.Comment{}
-		for commentRows.Next() {
-			var comment structs.Comment
-			err := commentRows.Scan(&comment.ID, &comment.Content, &comment.CreationDate, &comment.Username, &comment.Likes, &comment.Dislikes)
-			if err != nil {
-				http.Error(w, "Failed to scan comment rows", http.StatusInternalServerError)
-				return
-			}
-			comments = append(comments, comment)
-		}
-
-		if err = commentRows.Err(); err != nil {
-			http.Error(w, "Failed to iterate over comment rows", http.StatusInternalServerError)
-			return
-		}
+		post, _ := database.GetPost(db, postID)
+		comments, _ := database.GetPostComments(db, postID)
 
 		// Create a data struct to pass to the template
 		data := struct {

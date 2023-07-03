@@ -7,7 +7,7 @@
       <p class="postInfo">
         <span class="author">{{ .Post.Username }}</span>
         <br>
-        <span class="creationDate">{{ .Post.CreationDate }}</span>
+        <span class="creationDate">{{ .Post.CreationDate }}</span>{{ if .Post.Edited }}<span class="edited"> Edited</span>{{ end }}
       </p>
       {{ if .Post.ImageFileName }}
       <img class="postImage" src="../assets/uploads/{{ .Post.ImageFileName }}" alt="Post image">
@@ -38,7 +38,7 @@
     <p class="postInfo">
       <span class="author">{{ .Username }}</span>
       <br>
-      <span class="creationDate">{{ .CreationDate }}</span>
+      <span class="creationDate">{{ .CreationDate }}</span>{{ if .Edited }}<span class="edited"> Edited</span>{{ end }}
     </p>
     <p class="commentText">
       {{ .Content }}

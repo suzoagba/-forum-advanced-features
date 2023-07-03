@@ -158,10 +158,6 @@ button {
     font-size: small !important;
 }
 
-.createPost {
-    float: right;
-}
-
 .errorMessage {
     color: red;
     font-weight: bold;
@@ -204,4 +200,9 @@ button {
 
 .activityCat {
     border-bottom: 1px solid lightgray;
+}
+
+.edited {
+    color: gray;
+    font-style: italic;
 }

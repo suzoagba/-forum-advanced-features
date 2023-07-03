@@ -51,6 +51,8 @@ func CreateTables(db *sql.DB) error {
 			dislikes INTEGER DEFAULT 0,
 			creationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			imageFilename TEXT,
+			edited BOOLEAN DEFAULT false,
+			timeEdited TIMESTAMP,
 			FOREIGN KEY (username) REFERENCES users(username)
 		);
 
@@ -62,6 +64,8 @@ func CreateTables(db *sql.DB) error {
 			likes INTEGER DEFAULT 0,
 			dislikes INTEGER DEFAULT 0,
 			creationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			edited BOOLEAN DEFAULT false,
+			timeEdited TIMESTAMP,
 			FOREIGN KEY (postID) REFERENCES posts(postID),
 			FOREIGN KEY (username) REFERENCES users(username)
 		);

@@ -10,6 +10,8 @@ type Post struct {
 	ImageFileName string
 	Likes         int
 	Dislikes      int
+	Edited        bool
+	TimeEdited    string
 }
 
 type Comment struct {
@@ -21,6 +23,8 @@ type Comment struct {
 	CreationDate string
 	Likes        int
 	Dislikes     int
+	Edited       bool
+	TimeEdited   string
 }
 
 type User struct {
@@ -35,6 +39,7 @@ type ErrorMessage struct {
 	Field1  string
 	Field2  string
 	Field3  []string
+	Image   string
 }
 
 type Tag struct {

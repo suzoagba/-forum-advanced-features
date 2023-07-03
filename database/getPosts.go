@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"forum/structs"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -238,4 +239,79 @@ func GetCommentsByUserReaction(db *sql.DB, username string, reaction int) ([]str
 	}
 
 	return commentListings, nil
+}
+
+// Query the database to get the post information
+func GetPost(db *sql.DB, postID string) (structs.Post, error) {
+	postQuery := `
+			SELECT postID, title, description, imageFileName, creationDate, username, likes, dislikes, edited, timeEdited
+			FROM posts
+			WHERE postID = ?
+		`
+
+	postRow := db.QueryRow(postQuery, postID)
+
+	var post structs.Post
+	var imageFileName sql.NullString
+	var timeEdited sql.NullTime
+	err := postRow.Scan(&post.ID, &post.Title, &post.Description, &imageFileName, &post.CreationDate, &post.Username, &post.Likes, &post.Dislikes, &post.Edited, &timeEdited)
+	if err != nil {
+		log.Println(err)
+		return structs.Post{}, err
+	}
+
+	if imageFileName.Valid {
+		post.ImageFileName = imageFileName.String
+	} else {
+		post.ImageFileName = "" // Set a default value for imageFileName when it is NULL
+	}
+
+	if timeEdited.Valid {
+		post.TimeEdited = timeEdited.Time.Format("2006-01-02 15:04:05")
+	} else {
+		post.TimeEdited = ""
+	}
+
+	return post, nil
+}
+
+// Query the database to get the comments for the post
+func GetPostComments(db *sql.DB, postID string) ([]structs.Comment, error) {
+	commentQuery := `
+			SELECT commentID, content, creationDate, username, likes, dislikes, edited, timeEdited
+			FROM comments
+			WHERE postID = ?
+			ORDER BY creationDate ASC
+		`
+
+	commentRows, err := db.Query(commentQuery, postID)
+	if err != nil {
+		log.Println(err)
+		return []structs.Comment{}, err
+	}
+	defer commentRows.Close()
+
+	var comments []structs.Comment
+	for commentRows.Next() {
+		var comment structs.Comment
+		var timeEdited sql.NullTime
+		err := commentRows.Scan(&comment.ID, &comment.Content, &comment.CreationDate, &comment.Username, &comment.Likes, &comment.Dislikes, &comment.Edited, &timeEdited)
+		if err != nil {
+			log.Println(err)
+			return []structs.Comment{}, err
+		}
+		if timeEdited.Valid {
+			comment.TimeEdited = timeEdited.Time.Format("2006-01-02 15:04:05")
+		} else {
+			comment.TimeEdited = ""
+		}
+		comments = append(comments, comment)
+	}
+
+	if err = commentRows.Err(); err != nil {
+		log.Println(err)
+		return []structs.Comment{}, err
+	}
+
+	return comments, nil
 }
