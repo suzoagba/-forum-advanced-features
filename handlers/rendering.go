@@ -18,6 +18,7 @@ func RenderTemplates(page string, data interface{}, w http.ResponseWriter, r *ht
 		return
 	}
 	log.Println("#PAGE: " + page)
+	//log.Println("-data: ", data)
 
 	link := "./templates/"
 	switch page {
@@ -47,6 +48,7 @@ func RenderTemplates(page string, data interface{}, w http.ResponseWriter, r *ht
 	templates := template.Must(template.ParseFiles("./templates/base.html", link))
 	err := templates.ExecuteTemplate(w, "base.html", data)
 	if err != nil {
+		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

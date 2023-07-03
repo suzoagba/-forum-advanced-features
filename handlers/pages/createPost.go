@@ -3,6 +3,7 @@ package pages
 import (
 	"database/sql"
 	"fmt"
+	"forum/database"
 	"forum/handlers"
 	"forum/structs"
 	"io"
@@ -18,7 +19,7 @@ func CreatePostHandler(db *sql.DB) http.HandlerFunc {
 		forPage := structs.ForPage{}
 		forPage.User = handlers.IsLoggedIn(r, db).User
 		forPage.Error.Error = false
-		forPage.Tags = structs.Tags
+		forPage.Tags = database.Tags
 
 		// Check if the user is logged in
 		if !forPage.User.LoggedIn {

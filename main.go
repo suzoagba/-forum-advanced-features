@@ -7,7 +7,6 @@ import (
 	"forum/handlers"
 	"forum/handlers/pages"
 	"forum/handlers/user"
-	"forum/structs"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
@@ -29,7 +28,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	structs.GetTags(db)
+	database.GetTags(db)
 
 	// Page handlers
 	http.HandleFunc("/", pages.HomeHandler(db))

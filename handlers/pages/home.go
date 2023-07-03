@@ -21,7 +21,7 @@ func HomeHandler(db *sql.DB) http.HandlerFunc {
 		forPage := structs.ForPage{}
 		forPage.User = handlers.IsLoggedIn(r, db).User
 		forPage.Posts, _ = database.GetAllPosts(db, tagID, forPage.User)
-		forPage.Tags = structs.Tags
+		forPage.Tags = database.Tags
 		all := structs.Tag{
 			ID:   0,
 			Name: "All",
