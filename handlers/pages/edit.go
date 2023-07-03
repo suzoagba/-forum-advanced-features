@@ -176,13 +176,9 @@ func editPost(db *sql.DB, postID string, title, description, imageFilename strin
 			return err
 		}
 
-		// Insert the new tags for the post
-		insertTagQuery := `
-			INSERT INTO post_tags (postID, tagID)
-			SELECT ?, id FROM tags WHERE name = ?
-		`
-		for _, tagName := range tags {
-			_, err = db.Exec(insertTagQuery, postID, tagName)
+		// Insert the selected tags into the post_tags table
+		for _, tagID := range tags {
+			_, err = db.Exec("INSERT INTO post_tags (postID, tagID) VALUES (?, ?)", postID, tagID)
 			if err != nil {
 				return err
 			}

@@ -14,6 +14,9 @@
       {{ end }}
       <p class="description">
         {{ .Post.Description }}
+        {{ if eq .Post.Username .User.Username }}
+         <span class="editDelete">[&nbsp;<a class="edit" href="/edit?type=post&id={{ .Post.ID }}">Edit</a>&nbsp;]</span>
+        {{ end }}
       </p>
       <div class="liking">
         <span class="likes">
@@ -42,6 +45,9 @@
     </p>
     <p class="commentText">
       {{ .Content }}
+      {{ if eq .Username $.User.Username }}
+      <span class="editDelete">[&nbsp;<a class="edit" href="/edit?type=comment&id={{ .ID }}">Edit</a>&nbsp;]</span>
+      {{ end }}
     </p>
     <div class="liking">
         <span class="likes">
