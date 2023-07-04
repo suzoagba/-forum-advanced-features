@@ -206,3 +206,12 @@ button {
     color: gray;
     font-style: italic;
 }
+
+.notification {
+    border: 1px solid gray;
+    padding: 10px;
+}
+
+.unread {
+    border: 2px solid cyan;
+}

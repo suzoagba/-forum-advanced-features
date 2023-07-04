@@ -61,14 +61,29 @@ type Activity struct {
 	CommentDislikes []CommentListing
 }
 
+type Notification struct {
+	ID          int
+	User        string
+	Who         string
+	ActionDone  string
+	IsPost      bool
+	IsComment   bool
+	PostID      int
+	CommentID   int
+	IsRead      bool
+	CreatedDate string
+}
+
 type ForPage struct {
-	Error    ErrorMessage
-	User     User
-	Posts    []Post
-	Tags     []Tag
-	Comments []Comment
-	OAuth    OAuth
-	Activity Activity
+	Error               ErrorMessage
+	User                User
+	Posts               []Post
+	Tags                []Tag
+	Comments            []Comment
+	OAuth               OAuth
+	Activity            Activity
+	Notifications       []Notification
+	UnreadNotifications int
 }
 
 type OAuth struct {

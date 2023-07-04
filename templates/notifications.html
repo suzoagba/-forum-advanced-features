@@ -1,8 +1,16 @@
 {{ define "content" }}
 <div class="container">
   <p><a href="/" class="backButton"><< Back to main page</a></p>
+  <h2>Notifications</h2>
   {{ if .User.LoggedIn }}
-  <p>Here will be your notifications.</p>
+  {{ if eq 0 (len .Notifications) }}
+  <p>You have no notifications.</p>
+  {{ else }}
+  {{ range .Notifications }}
+  <p class="{{ if not .IsRead }}unread {{ end }}notification">{{ .Who }} has {{ .ActionDone }}d your <a href="/viewPost?id={{ .PostID }}{{ if .IsComment }}#comment{{ .CommentID }}{{end}}">{{ if .IsPost }}post{{ else }}comment{{end}}</a>.
+    <br><span class="creationDate">{{ .CreatedDate }}</span></p>
+  {{ end }}
+  {{ end }}
   {{ else }}
   <p class="errorMessage">You need to be logged in to see your notifications.</p>
   {{ end }}

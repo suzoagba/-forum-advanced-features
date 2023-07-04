@@ -111,7 +111,24 @@ func CreateTables(db *sql.DB) error {
 			UNIQUE(comment_id, user_id),
 			FOREIGN KEY (comment_id) REFERENCES comments(commentID),
 			FOREIGN KEY (user_id) REFERENCES users(uuid)
-		);	`
+		);	
+
+		CREATE TABLE IF NOT EXISTS notifications (
+			  notificationID INTEGER PRIMARY KEY AUTOINCREMENT,
+			  userID UUID,
+			  whoID UUID,
+			  actionDone TEXT,
+			  isPost BOOLEAN DEFAULT false,
+			  isComment BOOLEAN DEFAULT false,
+			  postID INTEGER,
+			  commentID INTEGER,
+			  isRead BOOLEAN DEFAULT false,
+			  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			  FOREIGN KEY (userID) REFERENCES users(uuid),
+			  FOREIGN KEY (whoID) REFERENCES users(uuid),
+			  FOREIGN KEY (postID) REFERENCES posts(postID),
+			  FOREIGN KEY (commentID) REFERENCES comments(commentID)
+		); `
 
 	_, err := db.Exec(createTableSQL)
 	if err != nil {
