@@ -1,13 +1,15 @@
-package handlers
+package pages
 
 import (
 	"database/sql"
+	"forum/handlers"
 	"net/http"
+	"strconv"
 )
 
 func ReplyHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ifIn := IsLoggedIn(r, db)
+		ifIn := handlers.IsLoggedIn(r, db)
 		if ifIn.User.LoggedIn {
 			if r.Method == http.MethodPost {
 				// Parse the form data from the request
@@ -22,10 +24,22 @@ func ReplyHandler(db *sql.DB) http.HandlerFunc {
 				content := r.Form.Get("content")
 
 				// Insert the reply data into the database
-				_, err = db.Exec("INSERT INTO comments (postID, username, content) VALUES (?, ?, ?)", postID, ifIn.User.Username, content)
+				result, err := db.Exec("INSERT INTO comments (postID, username, content) VALUES (?, ?, ?)", postID, ifIn.User.Username, content)
 				if err != nil {
 					http.Error(w, "Failed to insert reply data into database", http.StatusInternalServerError)
 					return
+				}
+
+				// Retrieve the comment ID of the inserted comment
+				commentID, err := result.LastInsertId()
+				if err != nil {
+					http.Error(w, "Failed to retrieve comment ID", http.StatusInternalServerError)
+					return
+				}
+
+				err = CreateNotification(db, "comment", ifIn.User.ID, true, false, postID, strconv.Itoa(int(commentID)))
+				if err != nil {
+					http.Error(w, "Failed to store notification", http.StatusInternalServerError)
 				}
 
 				// Redirect or display a success message

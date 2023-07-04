@@ -34,7 +34,7 @@ func main() {
 	http.HandleFunc("/", pages.HomeHandler(db))
 	http.HandleFunc("/createPost", pages.CreatePostHandler(db))
 	http.HandleFunc("/viewPost", pages.ViewPostHandler(db))
-	http.HandleFunc("/reply", handlers.ReplyHandler(db))
+	http.HandleFunc("/reply", pages.ReplyHandler(db))
 
 	http.HandleFunc("/register", user.RegisterHandler(db))
 	http.HandleFunc("/login", user.LoginHandler(db))
