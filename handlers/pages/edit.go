@@ -14,6 +14,7 @@ import (
 func EditHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Println("[edit]", r.Method)
+
 		user := handlers.IsLoggedIn(r, db).User
 		type forPage struct {
 			structs.User
@@ -36,11 +37,12 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 			}
 		} else if editType == "comment" {
 			comment, _ = GetComment(w, db, id)
-			if post.Username != user.Username {
+			if comment.Username != user.Username {
 				handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users comments")
 				return
 			}
 		}
+
 		if r.Method == http.MethodGet {
 			log.Println("[edit] get")
 
