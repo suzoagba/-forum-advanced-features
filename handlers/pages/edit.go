@@ -28,14 +28,21 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 
 		var post structs.Post
 		var comment structs.Comment
-		if r.Method == http.MethodGet {
-
-			log.Println("[edit] get")
-			if editType == "post" {
-				post, _ = GetPost(w, db, id)
-			} else if editType == "comment" {
-				comment, _ = GetComment(w, db, id)
+		if editType == "post" {
+			post, _ = GetPost(w, db, id)
+			if post.Username != user.Username {
+				handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users posts")
+				return
 			}
+		} else if editType == "comment" {
+			comment, _ = GetComment(w, db, id)
+			if post.Username != user.Username {
+				handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users comments")
+				return
+			}
+		}
+		if r.Method == http.MethodGet {
+			log.Println("[edit] get")
 
 			// Create a data struct to pass to the template
 			data := forPage{
@@ -47,8 +54,8 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 			handlers.RenderTemplates("edit", data, w, r)
 
 		} else if r.Method == http.MethodPost {
+			//TODO if user is the creator
 			log.Println("[edit] post")
-
 			if editType == "post" {
 				title, description, selectedTags, errStr := CheckPostCreation(r)
 				if errStr != "" {
