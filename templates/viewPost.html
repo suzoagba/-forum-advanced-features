@@ -8,15 +8,15 @@
         <span class="author">{{ .Post.Username }}</span>
         <br>
         <span class="creationDate">{{ .Post.CreationDate }}</span>{{ if .Post.Edited }}<span class="edited"> Edited</span>{{ end }}
+        {{ if eq .Post.Username .User.Username }}
+        <span class="editDelete"><a class="edit" href="/edit?type=post&id={{ .Post.ID }}">&#128394;</a><a class="delete" href="/delete?type=post&id={{ .Post.ID }}">&#128465;</a></span>
+        {{ end }}
       </p>
       {{ if .Post.ImageFileName }}
       <img class="postImage" src="../assets/uploads/{{ .Post.ImageFileName }}" alt="Post image">
       {{ end }}
       <p class="description">
         {{ .Post.Description }}
-        {{ if eq .Post.Username .User.Username }}
-         <span class="editDelete">[&nbsp;<a class="edit" href="/edit?type=post&id={{ .Post.ID }}">Edit</a>&nbsp;]</span>
-        {{ end }}
       </p>
       <div class="liking">
         <span class="likes">
@@ -42,12 +42,12 @@
       <span class="author">{{ .Username }}</span>
       <br>
       <span class="creationDate">{{ .CreationDate }}</span>{{ if .Edited }}<span class="edited"> Edited</span>{{ end }}
+      {{ if eq .Username $.User.Username }}
+      <span class="editDelete"><a class="edit" href="/edit?type=comment&id={{ .ID }}">&#128394;</a> <a class="delete" href="/delete?type=comment&id={{ .ID }}">&#128465;</a></span>
+      {{ end }}
     </p>
     <p class="commentText">
       {{ .Content }}
-      {{ if eq .Username $.User.Username }}
-      <span class="editDelete">[&nbsp;<a class="edit" href="/edit?type=comment&id={{ .ID }}">Edit</a>&nbsp;]</span>
-      {{ end }}
     </p>
     <div class="liking">
         <span class="likes">

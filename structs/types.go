@@ -28,9 +28,11 @@ type Comment struct {
 }
 
 type User struct {
-	ID       string
-	Username string // Display the name of the user who is logged in
-	LoggedIn bool
+	ID                  string
+	Username            string // Display the name of the user who is logged in
+	LoggedIn            bool
+	Type                string
+	UnreadNotifications int
 }
 
 type ErrorMessage struct {
@@ -75,15 +77,14 @@ type Notification struct {
 }
 
 type ForPage struct {
-	Error               ErrorMessage
-	User                User
-	Posts               []Post
-	Tags                []Tag
-	Comments            []Comment
-	OAuth               OAuth
-	Activity            Activity
-	Notifications       []Notification
-	UnreadNotifications int
+	Error         ErrorMessage
+	User          User
+	Posts         []Post
+	Tags          []Tag
+	Comments      []Comment
+	OAuth         OAuth
+	Activity      Activity
+	Notifications []Notification
 }
 
 type OAuth struct {

@@ -14,13 +14,15 @@
         <a href="/"><h1 id="logo">forum</h1></a>
         <div class="user">
             {{ if .User.LoggedIn }}
-            Logged in as <strong>{{ .User.Username }}</strong>
+            Logged in as <strong>{{ .User.Username }}</strong> ({{ .User.Type }})
+            {{ else }}
+            Browsing as Guest
             {{ end }}
             <ul>
                 {{ if .User.LoggedIn }}
                 <li><a href="/">Home</a></li>
                 <li><a href="/activity">My Activity</a></li>
-                <li><a href="/notifications">Notifications</a></li>
+                <li><a href="/notifications">Notifications {{ if ne .User.UnreadNotifications 0 }}<span id="unreadNotifications">{{ .User.UnreadNotifications }}{{ end}}</span></a></li>
                 <li><a href="/logout">Log Out</a></li>
                 {{ else }}
                 <li><a href="/register">Register</a></li>

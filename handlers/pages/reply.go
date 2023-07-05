@@ -37,7 +37,7 @@ func ReplyHandler(db *sql.DB) http.HandlerFunc {
 					return
 				}
 
-				err = CreateNotification(db, "comment", ifIn.User.ID, true, false, postID, strconv.Itoa(int(commentID)))
+				err = handlers.CreateNotification(db, "comment", ifIn.User.ID, true, false, postID, strconv.Itoa(int(commentID)))
 				if err != nil {
 					http.Error(w, "Failed to store notification", http.StatusInternalServerError)
 				}

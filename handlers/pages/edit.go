@@ -31,6 +31,7 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 		var comment structs.Comment
 		if editType == "post" {
 			post, _ = GetPost(w, db, id)
+			log.Println(post.Username, user.Username)
 			if post.Username != user.Username {
 				handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users posts")
 				return
@@ -53,10 +54,10 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 				Comment: comment,
 				Tags:    database.Tags,
 			}
+
 			handlers.RenderTemplates("edit", data, w, r)
 
 		} else if r.Method == http.MethodPost {
-			//TODO if user is the creator
 			log.Println("[edit] post")
 			if editType == "post" {
 				title, description, selectedTags, errStr := CheckPostCreation(r)

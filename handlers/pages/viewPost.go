@@ -101,7 +101,7 @@ func addLike(db *sql.DB, post bool, postID, commentID, userID, like string) stri
 		return "Failed to store reaction"
 	}
 
-	err = CreateNotification(db, action, userID, true, false, postID, commentID)
+	err = handlers.CreateNotification(db, action, userID, true, false, postID, commentID)
 	if err != nil {
 		return "Failed to store notification"
 	}
@@ -169,7 +169,7 @@ func updateLike(db *sql.DB, post, wasLike bool, postID, commentID, userID, like 
 		return "Failed to update " + typeOf
 	}
 
-	err = CreateNotification(db, action, userID, post, !post, postID, commentID)
+	err = handlers.CreateNotification(db, action, userID, post, !post, postID, commentID)
 	if err != nil {
 		return "Failed to store notification"
 	}

@@ -132,6 +132,17 @@ func deletePost(db *sql.DB, postID string) error {
 		return err
 	}
 
+	// Delete post notifications
+	deletePostNotificationsQuery := `
+		DELETE FROM notifications
+		WHERE postID = ?
+	`
+	_, err = tx.Exec(deletePostNotificationsQuery, postID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	// Commit the transaction
 	err = tx.Commit()
 	if err != nil {
@@ -139,7 +150,7 @@ func deletePost(db *sql.DB, postID string) error {
 		return err
 	}
 
-	log.Printf("Post with ID %d deleted successfully", postID)
+	log.Printf("Post with ID %s deleted successfully", postID)
 	return nil
 }
 
@@ -164,6 +175,17 @@ func deleteComment(db *sql.DB, commentID string) error {
 		return err
 	}
 
+	// Delete comment notifications
+	deleteCommentNotificationsQuery := `
+		DELETE FROM notifications
+		WHERE commentID = ?
+	`
+	_, err = tx.Exec(deleteCommentNotificationsQuery, commentID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	// Commit the transaction
 	err = tx.Commit()
 	if err != nil {
@@ -171,6 +193,6 @@ func deleteComment(db *sql.DB, commentID string) error {
 		return err
 	}
 
-	log.Printf("Comment with ID %d deleted successfully", commentID)
+	log.Printf("Comment with ID %s deleted successfully", commentID)
 	return nil
 }

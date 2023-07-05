@@ -43,8 +43,8 @@ func main() {
 
 	http.HandleFunc("/activity/", pages.ActivityHandler(db))
 	http.HandleFunc("/notifications", pages.NotifyHandler(db))
-	http.HandleFunc("/edit", pages.EditHandler(db))
-	http.HandleFunc("/delete", pages.DeleteHandler(db))
+	http.HandleFunc("/edit/", pages.EditHandler(db))
+	http.HandleFunc("/delete/", pages.DeleteHandler(db))
 
 	// Handling assets
 	fs := http.FileServer(http.Dir("./assets"))

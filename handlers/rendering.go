@@ -18,7 +18,6 @@ func RenderTemplates(page string, data interface{}, w http.ResponseWriter, r *ht
 		return
 	}
 	log.Println("#PAGE: " + page)
-	//log.Println("-data: ", data)
 
 	link := "./templates/"
 	switch page {

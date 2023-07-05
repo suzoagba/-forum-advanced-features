@@ -17,7 +17,7 @@
             <h3 class="activityHeadings">My posts</h3>
             {{ range .Activity.Posts }}
             <p><a href="/viewPost?id={{ .ID }}">{{ .Title }}</a>
-                <span class="editDelete">[ <a class="edit" href="/edit?type=post&id={{ .ID }}">Edit</a> | <a class="delete" href="/delete?type=post&id={{ .ID }}">Delete</a> ]</span></p>
+                <span class="editDelete"><a class="edit" href="/edit?type=post&id={{ .ID }}">&#128394;</a><a class="delete" href="/delete?type=post&id={{ .ID }}">&#128465;</a></span></p>
             {{ else }}
             <p>There are no posts.</p>
             {{ end }}
@@ -28,7 +28,7 @@
             <p><a href="/viewPost?id={{ .Post.ID }}">{{ .Post.Title }}</a></p>
             {{ range .Comments }}
             <p>{{ .Content }}
-                <span class="editDelete">[ <a class="edit" href="/edit?type=comment&id={{ .ID }}">Edit</a> | <a class="delete" href="/delete?type=comment&id={{ .ID }}">Delete</a> ]</span></p>
+                <span class="editDelete"><a class="edit" href="/edit?type=comment&id={{ .ID }}">&#128394;</a> <a class="delete" href="/delete?type=comment&id={{ .ID }}">&#128465;</a></span></p>
             {{ end }}
             {{ else }}
             <p>There are no comments.</p>
