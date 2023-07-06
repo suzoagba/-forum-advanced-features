@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func GetUserType(db *sql.DB, uuid string) (string, error) {
+func GetUserType(db *sql.DB, uuid string) (int, string, error) {
 	query := `
 		SELECT level FROM users WHERE uuid = ?
 	`
@@ -14,17 +14,17 @@ func GetUserType(db *sql.DB, uuid string) (string, error) {
 	var level int
 	err := row.Scan(&level)
 	if err != nil {
-		return "", err
+		return 0, "", err
 	}
 
 	switch level {
 	case 0:
-		return "User", nil
+		return level, "User", nil
 	case 1:
-		return "Moderator", nil
+		return level, "Moderator", nil
 	case 2:
-		return "Administrator", nil
+		return level, "Administrator", nil
 	default:
-		return "", fmt.Errorf("unknown user level: %d", level)
+		return 0, "", fmt.Errorf("unknown user level: %d", level)
 	}
 }

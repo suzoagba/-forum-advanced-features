@@ -5,7 +5,7 @@
   <div class="post">
     <div class="commentInfo">
       <p class="postInfo">
-        <span class="author">{{ .Post.Username }}</span>
+        <span class="author"><a href="/user?name={{ .Post.Username }}">{{ .Post.Username }}</a></span>
         <br>
         <span class="creationDate">{{ .Post.CreationDate }}</span>{{ if .Post.Edited }}<span class="edited"> Edited</span>{{ end }}
         {{ if eq .Post.Username .User.Username }}
@@ -39,7 +39,7 @@
   {{ range .Comments }}
   <div class="commentInfo" id="comment{{ .ID }}">
     <p class="postInfo">
-      <span class="author">{{ .Username }}</span>
+      <span class="author"><a href="/user?name={{ .Username }}">{{ .Username }}</a></span>
       <br>
       <span class="creationDate">{{ .CreationDate }}</span>{{ if .Edited }}<span class="edited"> Edited</span>{{ end }}
       {{ if eq .Username $.User.Username }}

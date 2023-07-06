@@ -83,6 +83,19 @@ Input your `client ID`-s and `secrets` to `oauth/clientInfo.go`.
 If you log in via Google or GitHub and a user is already registered by the same email, the previously registered
 username will be used. Otherwise, the username will be based on your email.
 
+### Advanced Features
+
+Users are notified (page 'Notifications') when their posts are:
+- liked/disliked (also comments)
+- commented
+
+At page 'My Activity' the user can track their own activity:
+- Shows the user created posts
+- Shows where the user left a like or a dislike
+- Shows where and what the user has been commenting. For this, the comment will have to be shown, as well as the post commented
+
+The user can Edit/Remove their posts and comments.
+
 ### Docker
 
 For the forum project Docker is used.

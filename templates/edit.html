@@ -5,7 +5,9 @@
   {{ if eq .Comment.ID "" }}
   <h2>Edit Post</h2>
   <div class="editPost">
-    <form id="editPost" method="POST" action="/edit?type=post&id={{ .Post.ID }}" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <form id="editPost" method="POST" action="/edit/" enctype="multipart/form-data" onsubmit="return validateForm()">
+      <input type="hidden" name="type" value="post">
+      <input type="hidden" name="id" value="{{ .Post.ID }}">
       <label for="title">Title:</label>
       <br>
       <input type="text" id="title" name="title" value="{{ .Post.Title }}" maxlength="130" required>
@@ -41,8 +43,9 @@
   {{ else }}
   <h2>Edit Comment</h2>
   <div class="editComment">
-    <form action="/edit?type=comment&id={{ .Comment.ID }}" method="POST">
-      <input type="hidden" name="commentID" value="{{ .Comment.ID }}">
+    <form action="/edit/" method="POST">
+      <input type="hidden" name="type" value="comment">
+      <input type="hidden" name="id" value="{{ .Comment.ID }}">
       <textarea name="content" placeholder="Enter your comment" required>{{ .Comment.Content }}</textarea>
       <br>
       <button type="submit">Edit</button>

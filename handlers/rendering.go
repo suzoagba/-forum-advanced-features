@@ -26,22 +26,25 @@ func RenderTemplates(page string, data interface{}, w http.ResponseWriter, r *ht
 	case "register":
 		link += "authentication/register.html"
 	case "login":
-		link += "authentication/login.html"
-	case "createPost":
-		link += page + ".html"
-	case "viewPost":
-		link += page + ".html"
-	case "activity":
-		link += page + ".html"
+		link += "authentication/login.html" /*
+			case "createPost":
+				link += page + ".html"
+			case "viewPost":
+				link += page + ".html"
+			case "activity":
+				link += page + ".html"*/
 	case "notify":
-		link += "notifications.html"
-	case "edit":
-		link += page + ".html"
-	case "delete":
-		link += page + ".html"
+		link += "notifications.html" /*
+			case "edit":
+				link += page + ".html"
+			case "delete":
+				link += page + ".html"
+			case "user":
+				link += page + ".html"*/
 	default:
-		ErrorHandler(w, http.StatusNotFound, "")
-		return
+		link += page + ".html"
+		//ErrorHandler(w, http.StatusNotFound, "")
+		//return
 	}
 
 	templates := template.Must(template.ParseFiles("./templates/base.html", link))

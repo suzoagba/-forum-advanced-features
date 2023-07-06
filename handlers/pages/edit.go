@@ -24,28 +24,28 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 			Error   structs.ErrorMessage
 		}
 
-		id := r.URL.Query().Get("id")
-		editType := r.URL.Query().Get("type")
-
-		var post structs.Post
-		var comment structs.Comment
-		if editType == "post" {
-			post, _ = GetPost(w, db, id)
-			log.Println(post.Username, user.Username)
-			if post.Username != user.Username {
-				handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users posts")
-				return
-			}
-		} else if editType == "comment" {
-			comment, _ = GetComment(w, db, id)
-			if comment.Username != user.Username {
-				handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users comments")
-				return
-			}
-		}
-
 		if r.Method == http.MethodGet {
 			log.Println("[edit] get")
+
+			id := r.URL.Query().Get("id")
+			editType := r.URL.Query().Get("type")
+
+			var post structs.Post
+			var comment structs.Comment
+			if editType == "post" {
+				post, _ = GetPost(w, db, id)
+				log.Println(post.Username, user.Username)
+				if post.Username != user.Username {
+					handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users posts")
+					return
+				}
+			} else if editType == "comment" {
+				comment, _ = GetComment(w, db, id)
+				if comment.Username != user.Username {
+					handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users comments")
+					return
+				}
+			}
 
 			// Create a data struct to pass to the template
 			data := forPage{
@@ -59,10 +59,20 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 
 		} else if r.Method == http.MethodPost {
 			log.Println("[edit] post")
+			id := r.FormValue("id")
+			editType := r.FormValue("type")
+
 			if editType == "post" {
 				title, description, selectedTags, errStr := CheckPostCreation(r)
 				if errStr != "" {
 					handlers.ErrorHandler(w, http.StatusInternalServerError, errStr)
+					return
+				}
+
+				post, _ := GetPost(w, db, id)
+				log.Println(post.Username, user.Username)
+				if post.Username != user.Username {
+					handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users posts")
 					return
 				}
 
@@ -94,16 +104,9 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 				http.Redirect(w, r, "/viewPost?id="+id, http.StatusFound)
 
 			} else if editType == "comment" {
-				err := r.ParseForm()
-				if err != nil {
-					log.Println(err)
-					http.Error(w, "Failed to parse form data", http.StatusBadRequest)
-					return
-				}
-				commentID := r.Form.Get("commentID")
-				content := r.Form.Get("content")
+				content := r.FormValue("content")
 
-				err = editComment(w, db, commentID, content)
+				err := editComment(w, db, id, content)
 				if err != nil {
 					log.Println(err)
 					http.Error(w, "Failed to edit comment", http.StatusInternalServerError)

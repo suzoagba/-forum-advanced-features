@@ -21,8 +21,6 @@ func ActivityHandler(db *sql.DB) http.HandlerFunc {
 		forPage.Activity.CommentDislikes, _ = database.GetCommentsByUserReaction(db, forPage.User.ID, 0)
 		if r.Method == http.MethodGet {
 			handlers.RenderTemplates("activity", forPage, w, r)
-		} else if r.Method == http.MethodPost {
-			handlers.RenderTemplates("activity", forPage, w, r) // TODO
 		}
 	}
 }

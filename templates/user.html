@@ -1,0 +1,29 @@
+{{ define "content" }}
+<div class="container">
+  <h2>{{ .UserInfo.Username }}</h2>
+  <p>Username: {{ .UserInfo.Username }}</p>
+  <p>Email: {{ .UserInfo.Email }}</p>
+  <p>User type: {{ .UserInfo.Type }}</p>
+  {{ if eq .User.Username .UserInfo.Username }}
+  {{ if eq .User.TypeInt 0 }}
+  <a href="/user?topic=moderator">Request to become a moderator</a>
+  {{ end }}
+  {{ end }}
+  {{ if eq .User.TypeInt 2 }}
+  <br>
+  <p>Change user type:</p>
+  <div class="changeUser">
+    <form action="/user/" method="POST">
+      <input type="hidden" id="name" name="name" value="{{ .UserInfo.Username }}">
+      <label for="level">New Type:</label>
+      <select id="level" name="level" required>
+        <option value="0">User</option>
+        <option value="1">Moderator</option>
+        <option value="2">Admin</option>
+      </select>
+      <input type="submit" value="Change Level">
+    </form>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

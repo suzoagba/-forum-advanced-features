@@ -39,7 +39,7 @@ func IsLoggedIn(r *http.Request, db *sql.DB) userInfo {
 		return info
 	}
 
-	// Check if the session ID exists in the database
+	// Check if the ID and email exists in the database
 	row = db.QueryRow("SELECT uuid FROM users WHERE username = ?;", username)
 	var uuid string
 	err = row.Scan(&uuid)
@@ -52,7 +52,7 @@ func IsLoggedIn(r *http.Request, db *sql.DB) userInfo {
 	info.User.ID = uuid
 	info.User.Username = username
 	info.User.LoggedIn = true
-	info.User.Type, err = GetUserType(db, uuid)
+	info.User.TypeInt, info.User.Type, err = GetUserType(db, uuid)
 	if err != nil {
 		info.User.LoggedIn = false
 		return info

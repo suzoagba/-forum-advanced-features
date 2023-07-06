@@ -7,7 +7,7 @@
   <p>You have no notifications.</p>
   {{ else }}
   {{ range .Notifications }}
-  <p class="{{ if not .IsRead }}unread {{ end }}notification">{{ .Who }} has {{ .ActionDone }}d your <a href="/viewPost?id={{ .PostID }}{{ if .IsComment }}#comment{{ .CommentID }}{{end}}">{{ if .IsPost }}post{{ else }}comment{{end}}</a>.
+  <p class="{{ if not .IsRead }}unread {{ end }}notification"><a href="/user?name={{ .Who }}">{{ .Who }}</a> has {{ .ActionDone }}d your <a href="/viewPost?id={{ .PostID }}{{ if .IsComment }}#comment{{ .CommentID }}{{end}}">{{ if .IsPost }}post{{ else }}comment{{end}}</a>.
     <br><span class="creationDate">{{ .CreatedDate }}</span></p>
   {{ end }}
   {{ end }}

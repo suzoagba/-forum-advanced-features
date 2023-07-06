@@ -21,9 +21,20 @@ func DeleteHandler(db *sql.DB) http.HandlerFunc {
 			Error   structs.ErrorMessage
 		}
 
-		id := r.URL.Query().Get("id")
-		editType := r.URL.Query().Get("type")
-		ans := r.FormValue("yesno")
+		var (
+			id       string
+			editType string
+			ans      string
+		)
+
+		if r.Method == http.MethodGet {
+			id = r.URL.Query().Get("id")
+			editType = r.URL.Query().Get("type")
+		} else if r.Method == http.MethodPost {
+			id = r.FormValue("id")
+			editType = r.FormValue("type")
+			ans = r.FormValue("yesno")
+		}
 
 		var post structs.Post
 		var comment structs.Comment
@@ -51,6 +62,7 @@ func DeleteHandler(db *sql.DB) http.HandlerFunc {
 			handlers.RenderTemplates("delete", data, w, r)
 
 		} else if r.Method == http.MethodPost {
+
 			if ans == "true" {
 				var err error
 				if editType == "post" {

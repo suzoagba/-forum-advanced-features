@@ -14,7 +14,7 @@
         <a href="/"><h1 id="logo">forum</h1></a>
         <div class="user">
             {{ if .User.LoggedIn }}
-            Logged in as <strong>{{ .User.Username }}</strong> ({{ .User.Type }})
+            Logged in as <strong><a href="/user?name={{ .User.Username }}">{{ .User.Username }}</a></strong> ({{ .User.Type }})
             {{ else }}
             Browsing as Guest
             {{ end }}

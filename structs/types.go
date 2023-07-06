@@ -31,8 +31,16 @@ type User struct {
 	ID                  string
 	Username            string // Display the name of the user who is logged in
 	LoggedIn            bool
+	TypeInt             int
 	Type                string
 	UnreadNotifications int
+}
+
+type UserInfo struct {
+	Email    string
+	Username string
+	TypeInt  int
+	Type     string
 }
 
 type ErrorMessage struct {
@@ -85,6 +93,7 @@ type ForPage struct {
 	OAuth         OAuth
 	Activity      Activity
 	Notifications []Notification
+	UserInfo      UserInfo
 }
 
 type OAuth struct {

@@ -45,6 +45,8 @@ func register(w http.ResponseWriter, r *http.Request, db *sql.DB, forPage struct
 	username := r.Form.Get("username")
 	password := r.Form.Get("password")
 
+	// TODO check username for invalid chars
+
 	invalidInput := false // Checks if the credentials that user wrote are valid
 
 	// Check if the email or username is already taken
