@@ -16,11 +16,56 @@ func ReportHandler(db *sql.DB) http.HandlerFunc {
 			id := r.FormValue("id")
 			approved := r.FormValue("approved")
 			if approved == "true" {
-				fmt.Println(id)
+				err := approvePost(db, id)
+				if err != nil {
+					http.Error(w, "Failed to approve post", http.StatusInternalServerError)
+				}
+				http.Redirect(w, r, "/viewPost?id="+id, http.StatusFound)
+				return
 			} else {
 				reason := r.FormValue("reason")
-				fmt.Println(reason)
+				err := storeReport(db, id, reason)
+				if err != nil {
+					http.Error(w, "Failed to save report", http.StatusInternalServerError)
+				}
+				http.Redirect(w, r, "/viewPost?id="+id, http.StatusFound)
+				return
 			}
 		}
 	}
+}
+
+func approvePost(db *sql.DB, id string) error {
+	updateQuery := `
+		UPDATE posts
+		SET approved = true
+		WHERE postID = ?
+	`
+	_, err := db.Exec(updateQuery, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func storeReport(db *sql.DB, postID string, reason string) error {
+	insertQuery := `
+		INSERT INTO admin_notifications (post, postID)
+		VALUES (?, ?)
+	`
+	_, err := db.Exec(insertQuery, true, postID)
+	if err != nil {
+		return err
+	}
+
+	updateQuery := `
+		UPDATE posts
+		SET reported = true, report_reason = ?
+		WHERE postID = ?
+	`
+	_, err = db.Exec(updateQuery, reason, postID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

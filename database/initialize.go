@@ -53,6 +53,9 @@ func CreateTables(db *sql.DB) error {
 			imageFilename TEXT,
 			edited BOOLEAN DEFAULT false,
 			timeEdited TIMESTAMP,
+			approved BOOLEAN DEFAULT true,
+			reported BOOLEAN DEFAULT false,
+			report_reason TEXT,
 			FOREIGN KEY (username) REFERENCES users(username)
 		);
 
@@ -130,11 +133,15 @@ func CreateTables(db *sql.DB) error {
 			  FOREIGN KEY (commentID) REFERENCES comments(commentID)
 		); 
 
-		CREATE TABLE IF NOT EXISTS waiting_for_approval (
+		CREATE TABLE IF NOT EXISTS admin_notifications (
 		    id INTEGER PRIMARY KEY AUTOINCREMENT,
-		    postID INTEGER,
-			FOREIGN KEY (postID) REFERENCES posts(postID)
-		)`
+		    post BOOLEAN DEFAULT false,
+		    postID INTEGER DEFAULT 0,
+		    user BOOLEAN DEFAULT false,
+		    userID UUID,
+			FOREIGN KEY (postID) REFERENCES posts(postID),
+			FOREIGN KEY (userID) REFERENCES users(uuid)
+		);`
 
 	_, err := db.Exec(createTableSQL)
 	if err != nil {

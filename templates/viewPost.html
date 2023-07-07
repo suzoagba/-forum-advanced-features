@@ -1,6 +1,9 @@
 {{ define "content" }}
 <div class="container">
   <p><a href="/" class="backButton"><< Back to main page</a></p>
+  {{ if eq .Post.Title "" }}
+  <p>There is no post with this ID.</p>
+  {{ else }}
   {{ if or (.Post.Approved) (or (eq .User.Username .Post.Username) (ne .User.TypeInt 0)) }}
   <h2>{{ .Post.Title }}</h2>
   <div class="post">
@@ -110,10 +113,11 @@
         <option value="obscene">Obscene</option>
         <option value="illegal">Illegal</option>
         <option value="insulting">Insulting</option>
-         <input type="submit" value="Report it">
+        <input type="submit" value="Report it">
       </select>
     </form>
   </div>
+  {{ end }}
   {{ end }}
   {{ end }}
 </div>
