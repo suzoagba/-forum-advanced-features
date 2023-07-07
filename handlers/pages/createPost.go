@@ -16,6 +16,7 @@ import (
 )
 
 func CreatePostHandler(db *sql.DB) http.HandlerFunc {
+	approvalNeeded := true // if new posts need moderator approval
 	return func(w http.ResponseWriter, r *http.Request) {
 		forPage := structs.ForPage{}
 		forPage.User = handlers.IsLoggedIn(r, db).User
@@ -58,10 +59,10 @@ func CreatePostHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		// Prepare the SQL statement for inserting post data
-		stmt := "INSERT INTO posts (username, title, description, imageFilename) VALUES (?, ?, ?, ?)"
+		stmt := "INSERT INTO posts (username, title, description, imageFilename, approved) VALUES (?, ?, ?, ?, ?)"
 
 		// Execute the SQL statement to insert post data into the database
-		result, err := db.Exec(stmt, forPage.User.Username, title, description, imageFilename)
+		result, err := db.Exec(stmt, forPage.User.Username, title, description, imageFilename, !approvalNeeded)
 		if err != nil {
 			handlers.ErrorHandler(w, http.StatusInternalServerError, "Failed to insert post data into the database.")
 			return

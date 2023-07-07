@@ -128,7 +128,13 @@ func CreateTables(db *sql.DB) error {
 			  FOREIGN KEY (whoID) REFERENCES users(uuid),
 			  FOREIGN KEY (postID) REFERENCES posts(postID),
 			  FOREIGN KEY (commentID) REFERENCES comments(commentID)
-		); `
+		); 
+
+		CREATE TABLE IF NOT EXISTS waiting_for_approval (
+		    id INTEGER PRIMARY KEY AUTOINCREMENT,
+		    postID INTEGER,
+			FOREIGN KEY (postID) REFERENCES posts(postID)
+		)`
 
 	_, err := db.Exec(createTableSQL)
 	if err != nil {

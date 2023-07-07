@@ -12,6 +12,9 @@ type Post struct {
 	Dislikes      int
 	Edited        bool
 	TimeEdited    string
+	Approved      bool
+	Reported      bool
+	ReportReason  string
 }
 
 type Comment struct {

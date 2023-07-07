@@ -1,6 +1,7 @@
 {{ define "content" }}
 <div class="container">
   <p><a href="/" class="backButton"><< Back to main page</a></p>
+  {{ if or (.Post.Approved) (or (eq .User.Username .Post.Username) (ne .User.TypeInt 0)) }}
   <h2>{{ .Post.Title }}</h2>
   <div class="post">
     <div class="commentInfo">
@@ -18,6 +19,7 @@
       <p class="description">
         {{ .Post.Description }}
       </p>
+      {{ if .Post.Approved }}
       <div class="liking">
         <span class="likes">
           {{ .Post.Likes }}
@@ -34,8 +36,10 @@
         &#x1F44E;
         {{ end }}
       </div>
+      {{ end }}
     </div>
   </div>
+  {{ if .Post.Approved }}
   {{ range .Comments }}
   <div class="commentInfo" id="comment{{ .ID }}">
     <p class="postInfo">
@@ -79,6 +83,38 @@
   </div>
   {{ else }}
   <p>Please log in to reply or react to this post or comments.</p>
+  {{ end }}
+  {{ end }}
+  {{ end }}
+  {{ if not .Post.Approved }}
+  <p>&#128308; This post is not yet approved by the moderators.</p>
+  {{ if .Post.Reported }}
+  <p>&#10071; This post has been reported as {{ .Post.ReportReason}}.</p>
+  {{ else if eq .User.TypeInt 1 }}
+  <div class="reportPost">
+    <form action="/report/" method="POST">
+      <input type="hidden" name="id" value="{{ .Post.ID }}">
+      <input type="hidden" name="approved" value="true">
+      <input type="submit" value="Accept">
+    </form>
+  </div>
+  <p>or</p>
+  <div class="reportPost">
+    <form action="/report/" method="POST">
+      <input type="hidden" name="id" value="{{ .Post.ID }}">
+      <input type="hidden" name="approved" value="false">
+      <label for="reason">Because the post is</label>
+      <select id="reason" name="reason" required>
+        <option value="" disabled selected>Select a reason</option>
+        <option value="irrelevant">Irrelevant</option>
+        <option value="obscene">Obscene</option>
+        <option value="illegal">Illegal</option>
+        <option value="insulting">Insulting</option>
+         <input type="submit" value="Report it">
+      </select>
+    </form>
+  </div>
+  {{ end }}
   {{ end }}
 </div>
 {{ end }}

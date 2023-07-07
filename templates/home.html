@@ -17,12 +17,14 @@
     <br>
     {{ end }}
     {{ range .Posts }}
+    {{ if .Approved }}
     <div class="postPreview">
         <a href="/viewPost?id={{ .ID }}"><h3 class="postTitle">{{ .Title }}</h3></a>
         <p class="postPreviewInfo">
             Posted by: <a href="/user?name={{ .Username }}">{{ .Username }}</a> || <span class="creationDate">{{ .CreationDate }}</span> ||{{ range .Tags }} {{ . }}{{ end }}
         </p>
     </div>
+    {{ end }}
     {{ else }}
     <p>There are no posts.</p>
     {{ end }}

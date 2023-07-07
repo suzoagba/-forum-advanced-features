@@ -16,7 +16,7 @@ func GetAllPosts(db *sql.DB, tagID int, user structs.User) ([]structs.Post, erro
 	}
 
 	query := `
-		SELECT p.postID, u.username, p.title, p.description, p.creationDate, GROUP_CONCAT(t.name), p.likes, p.dislikes
+		SELECT p.postID, u.username, p.title, p.description, p.creationDate, GROUP_CONCAT(t.name), p.likes, p.dislikes, p.approved
 		FROM posts p
 		JOIN users u ON p.username = u.username
 		LEFT JOIN post_tags pt ON p.postID = pt.postID
@@ -40,7 +40,7 @@ func GetAllPosts(db *sql.DB, tagID int, user structs.User) ([]structs.Post, erro
 	for rows.Next() {
 		var post structs.Post
 		var tags string
-		if err = rows.Scan(&post.ID, &post.Username, &post.Title, &post.Description, &post.CreationDate, &tags, &post.Likes, &post.Dislikes); err != nil {
+		if err = rows.Scan(&post.ID, &post.Username, &post.Title, &post.Description, &post.CreationDate, &tags, &post.Likes, &post.Dislikes, &post.Approved); err != nil {
 			return nil, err
 		}
 		post.Tags = strings.Split(tags, ",")
@@ -55,7 +55,7 @@ func GetAllPosts(db *sql.DB, tagID int, user structs.User) ([]structs.Post, erro
 
 func GetPostsCreatedByUser(db *sql.DB, username string) ([]structs.Post, error) {
 	query := `
-		SELECT p.postID, u.username, p.title, p.description, p.creationDate, GROUP_CONCAT(t.name), p.likes, p.dislikes
+		SELECT p.postID, u.username, p.title, p.description, p.creationDate, GROUP_CONCAT(t.name), p.likes, p.dislikes, p.approved
 		FROM posts p
 		JOIN users u ON p.username = u.username
 		LEFT JOIN post_tags pt ON p.postID = pt.postID
@@ -74,7 +74,7 @@ func GetPostsCreatedByUser(db *sql.DB, username string) ([]structs.Post, error) 
 	for rows.Next() {
 		var post structs.Post
 		var tags string
-		if err = rows.Scan(&post.ID, &post.Username, &post.Title, &post.Description, &post.CreationDate, &tags, &post.Likes, &post.Dislikes); err != nil {
+		if err = rows.Scan(&post.ID, &post.Username, &post.Title, &post.Description, &post.CreationDate, &tags, &post.Likes, &post.Dislikes, &post.Approved); err != nil {
 			return nil, err
 		}
 		post.Tags = strings.Split(tags, ",")
@@ -244,7 +244,7 @@ func GetCommentsByUserReaction(db *sql.DB, username string, reaction int) ([]str
 // Query the database to get the post information
 func GetPost(db *sql.DB, postID string) (structs.Post, error) {
 	postQuery := `
-			SELECT postID, title, description, imageFileName, creationDate, username, likes, dislikes, edited, timeEdited
+			SELECT postID, title, description, imageFileName, creationDate, username, likes, dislikes, edited, timeEdited, approved, reported, report_reason
 			FROM posts
 			WHERE postID = ?
 		`
@@ -253,17 +253,24 @@ func GetPost(db *sql.DB, postID string) (structs.Post, error) {
 
 	var post structs.Post
 	var imageFileName sql.NullString
+	var reportReason sql.NullString
 	var timeEdited sql.NullTime
-	err := postRow.Scan(&post.ID, &post.Title, &post.Description, &imageFileName, &post.CreationDate, &post.Username, &post.Likes, &post.Dislikes, &post.Edited, &timeEdited)
+	err := postRow.Scan(&post.ID, &post.Title, &post.Description, &imageFileName, &post.CreationDate, &post.Username, &post.Likes, &post.Dislikes, &post.Edited, &timeEdited, &post.Approved, &post.Reported, &reportReason)
 	if err != nil {
 		log.Println(err)
 		return structs.Post{}, err
 	}
 
+	if reportReason.Valid {
+		post.ReportReason = reportReason.String
+	} else {
+		post.ReportReason = "" // Set a default value when it is NULL
+	}
+
 	if imageFileName.Valid {
 		post.ImageFileName = imageFileName.String
 	} else {
-		post.ImageFileName = "" // Set a default value for imageFileName when it is NULL
+		post.ImageFileName = "" // Set a default value when it is NULL
 	}
 
 	if timeEdited.Valid {

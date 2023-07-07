@@ -16,7 +16,7 @@
         <div id="myPosts" class="activityCat">
             <h3 class="activityHeadings">My posts</h3>
             {{ range .Activity.Posts }}
-            <p><a href="/viewPost?id={{ .ID }}">{{ .Title }}</a>
+            <p>{{ if not .Approved }}&#128308; {{ end }}<a href="/viewPost?id={{ .ID }}">{{ .Title }}</a>
                 <span class="editDelete"><a class="edit" href="/edit?type=post&id={{ .ID }}">&#128394;</a><a class="delete" href="/delete?type=post&id={{ .ID }}">&#128465;</a></span></p>
             {{ else }}
             <p>There are no posts.</p>
