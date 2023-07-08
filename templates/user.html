@@ -5,15 +5,28 @@
   <p>Email: {{ .UserInfo.Email }}</p>
   <p>User type: {{ .UserInfo.Type }}</p>
   {{ if eq .User.Username .UserInfo.Username }}
-  {{ if eq .User.TypeInt 0 }}
-  <a href="/user?topic=moderator">Request to become a moderator</a>
+  {{ if and (eq .User.TypeInt 0) }}
+  {{ if .User.PromotionRequest }}
+  <p>Your request to become a moderator has been sent to admin.</p>
+  {{ else }}
+  <div class="requestMode">
+    <form action="/user/" method="POST">
+      <input type="hidden" name="id" value="{{ .User.ID }}">
+      <input type="hidden" name="name" value="{{ .UserInfo.Username }}">
+      <input type="submit" value="Request to become a moderator">
+    </form>
+  </div>
+  {{ end }}
   {{ end }}
   {{ end }}
   {{ if eq .User.TypeInt 2 }}
-  <br>
+  {{ if .UserInfo.PromotionRequest }}
+  <p>This user has requested to become a moderator.</p>
+  {{ end }}
   <p>Change user type:</p>
   <div class="changeUser">
-    <form action="/user/" method="POST">
+    <form action="/admin/user" method="POST">
+      <input type="hidden" name="id" value="{{ .UserInfo.ID }}">
       <input type="hidden" id="name" name="name" value="{{ .UserInfo.Username }}">
       <label for="level">New Type:</label>
       <select id="level" name="level" required>

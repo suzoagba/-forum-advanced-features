@@ -39,7 +39,8 @@ func CreateTables(db *sql.DB) error {
 		email TEXT UNIQUE,
 		username TEXT UNIQUE,
 		password TEXT,
-		level INTEGER DEFAULT 0
+		level INTEGER DEFAULT 0,
+		requested_for_promotion BOOLEAN DEFAULT false
 	);
 
 		CREATE TABLE IF NOT EXISTS posts (

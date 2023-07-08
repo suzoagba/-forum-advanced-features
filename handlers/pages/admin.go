@@ -42,13 +42,22 @@ func AdminHandler(db *sql.DB) http.HandlerFunc {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 				}
 				err = deleteAdminNotification(db, true, id)
-				forPage.User = handlers.IsLoggedIn(r, db).User
 			} else if page == "user" {
-				// TODO
+				id := r.FormValue("id")
+				name := r.FormValue("name")
+				level := r.FormValue("level")
+				err = changeUserLevel(db, id, level)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+				}
+				err = deleteAdminNotification(db, false, id)
+				http.Redirect(w, r, "/user?name="+name, http.StatusFound)
+				return
 			}
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
+			forPage.User = handlers.IsLoggedIn(r, db).User
 			handlers.RenderTemplates("admin", forPage, w, r)
 			return
 		}
@@ -134,5 +143,34 @@ func deleteAdminNotification(db *sql.DB, post bool, id string) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func changeUserLevel(db *sql.DB, id string, level string) error {
+	// Start a database transaction
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	// Update the user's level
+	updateUserLevelQuery := `
+		UPDATE users
+		SET level = ?, requested_for_promotion = false
+		WHERE uuid = ?
+	`
+	_, err = tx.Exec(updateUserLevelQuery, level, id)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Commit the transaction
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	return nil
 }

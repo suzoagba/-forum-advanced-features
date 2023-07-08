@@ -37,14 +37,17 @@ type User struct {
 	TypeInt             int
 	Type                string
 	UnreadNotifications int
+	PromotionRequest    bool
 	Admin               Admin
 }
 
 type UserInfo struct {
-	Email    string
-	Username string
-	TypeInt  int
-	Type     string
+	ID               string
+	Email            string
+	Username         string
+	TypeInt          int
+	Type             string
+	PromotionRequest bool
 }
 
 type ErrorMessage struct {

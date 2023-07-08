@@ -26,9 +26,16 @@ func IsLoggedIn(r *http.Request, db *sql.DB) userInfo {
 	}
 
 	// Check if the session ID exists in the database
-	row := db.QueryRow("SELECT username FROM authenticated_users WHERE session_id = ?;", sessionID)
+	row := db.QueryRow(`
+	SELECT u.username, u.requested_for_promotion
+	FROM authenticated_users AS a
+	INNER JOIN users AS u ON a.username = u.username
+	WHERE a.session_id = ?;
+`, sessionID)
+
 	var username string
-	err = row.Scan(&username)
+	var requestedForPromotion bool
+	err = row.Scan(&username, &requestedForPromotion)
 	if err == sql.ErrNoRows {
 		// Session ID does not exist in the database
 		info.User.LoggedIn = false
@@ -51,6 +58,7 @@ func IsLoggedIn(r *http.Request, db *sql.DB) userInfo {
 
 	info.User.ID = uuid
 	info.User.Username = username
+	info.User.PromotionRequest = requestedForPromotion
 	info.User.LoggedIn = true
 	info.User.TypeInt, info.User.Type, err = GetUserType(db, uuid)
 	if err != nil {
