@@ -62,6 +62,11 @@ func IsLoggedIn(r *http.Request, db *sql.DB) userInfo {
 		info.User.LoggedIn = false
 		return info
 	}
+	info.User.Admin.UnreadNotifications, err = GetAdminNotificationCount(db)
+	if err != nil {
+		info.User.LoggedIn = false
+		return info
+	}
 
 	return info
 }

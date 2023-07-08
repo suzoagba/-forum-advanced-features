@@ -93,6 +93,21 @@
   <p>&#128308; This post is not yet approved by the moderators.</p>
   {{ if .Post.Reported }}
   <p>&#10071; This post has been reported as {{ .Post.ReportReason}}.</p>
+  {{ if eq .User.TypeInt 2 }}
+  <div class="approvePost">
+    <form action="/admin/post" method="POST">
+      <input type="hidden" name="id" value="{{ .Post.ID }}">
+      <input type="hidden" name="approved" value="true">
+      <input type="submit" value="Approve post">
+    </form>
+    <form action="/admin/post" method="POST">
+      <input type="hidden" name="id" value="{{ .Post.ID }}">
+      <input type="hidden" name="approved" value="false">
+      <input type="submit" value="Remove post">
+    </form>
+  </div>
+
+  {{ end }}
   {{ else if eq .User.TypeInt 1 }}
   <div class="reportPost">
     <form action="/report/" method="POST">

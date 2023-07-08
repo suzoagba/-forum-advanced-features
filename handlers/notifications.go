@@ -186,3 +186,17 @@ func GetUserIDFromCommentID(db *sql.DB, commentID string) (string, error) {
 
 	return userID, nil
 }
+
+func GetAdminNotificationCount(db *sql.DB) (int, error) {
+	query := `
+		SELECT COUNT(*) FROM admin_notifications
+	`
+
+	var count int
+	err := db.QueryRow(query).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}

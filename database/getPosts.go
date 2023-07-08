@@ -255,7 +255,21 @@ func GetPost(db *sql.DB, postID string) (structs.Post, error) {
 	var imageFileName sql.NullString
 	var reportReason sql.NullString
 	var timeEdited sql.NullTime
-	err := postRow.Scan(&post.ID, &post.Title, &post.Description, &imageFileName, &post.CreationDate, &post.Username, &post.Likes, &post.Dislikes, &post.Edited, &timeEdited, &post.Approved, &post.Reported, &reportReason)
+	err := postRow.Scan(
+		&post.ID,
+		&post.Title,
+		&post.Description,
+		&imageFileName,
+		&post.CreationDate,
+		&post.Username,
+		&post.Likes,
+		&post.Dislikes,
+		&post.Edited,
+		&timeEdited,
+		&post.Approved,
+		&post.Reported,
+		&reportReason,
+	)
 	if err != nil {
 		log.Println(err)
 		return structs.Post{}, err
@@ -302,7 +316,16 @@ func GetPostComments(db *sql.DB, postID string) ([]structs.Comment, error) {
 	for commentRows.Next() {
 		var comment structs.Comment
 		var timeEdited sql.NullTime
-		err := commentRows.Scan(&comment.ID, &comment.Content, &comment.CreationDate, &comment.Username, &comment.Likes, &comment.Dislikes, &comment.Edited, &timeEdited)
+		err := commentRows.Scan(
+			&comment.ID,
+			&comment.Content,
+			&comment.CreationDate,
+			&comment.Username,
+			&comment.Likes,
+			&comment.Dislikes,
+			&comment.Edited,
+			&timeEdited,
+		)
 		if err != nil {
 			log.Println(err)
 			return []structs.Comment{}, err

@@ -1,22 +1,21 @@
-package handlers
+package pages
 
 import (
 	"database/sql"
-	"fmt"
+	"forum/handlers"
 	"net/http"
 )
 
 func ReportHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(r.Method)
-		user := IsLoggedIn(r, db).User
+		user := handlers.IsLoggedIn(r, db).User
 		if r.Method != http.MethodPost || user.TypeInt != 1 {
 			http.Redirect(w, r, "/", http.StatusFound)
 		} else {
 			id := r.FormValue("id")
 			approved := r.FormValue("approved")
 			if approved == "true" {
-				err := approvePost(db, id)
+				err := ApprovePost(db, id)
 				if err != nil {
 					http.Error(w, "Failed to approve post", http.StatusInternalServerError)
 				}
@@ -35,10 +34,10 @@ func ReportHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-func approvePost(db *sql.DB, id string) error {
+func ApprovePost(db *sql.DB, id string) error {
 	updateQuery := `
 		UPDATE posts
-		SET approved = true
+		SET approved = true, reported = false
 		WHERE postID = ?
 	`
 	_, err := db.Exec(updateQuery, id)

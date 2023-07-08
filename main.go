@@ -46,7 +46,8 @@ func main() {
 	http.HandleFunc("/edit/", pages.EditHandler(db))
 	http.HandleFunc("/delete/", pages.DeleteHandler(db))
 	http.HandleFunc("/user/", user.UserHandler(db))
-	http.HandleFunc("/report/", handlers.ReportHandler(db))
+	http.HandleFunc("/report/", pages.ReportHandler(db))
+	http.HandleFunc("/admin/", pages.AdminHandler(db))
 
 	// Handling assets
 	fs := http.FileServer(http.Dir("./assets"))

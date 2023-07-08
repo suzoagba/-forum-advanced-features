@@ -37,6 +37,7 @@ type User struct {
 	TypeInt             int
 	Type                string
 	UnreadNotifications int
+	Admin               Admin
 }
 
 type UserInfo struct {
@@ -63,6 +64,19 @@ type Tag struct {
 type CommentListing struct {
 	Post     Post
 	Comments []Comment
+}
+type Admin struct {
+	UnreadNotifications int
+	Notifications       []AdminNotification
+}
+
+type AdminNotification struct {
+	ID       int
+	Post     bool
+	PostID   int
+	User     bool
+	Username string
+	UserID   string
 }
 
 type Activity struct {

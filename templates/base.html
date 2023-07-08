@@ -22,7 +22,8 @@
                 {{ if .User.LoggedIn }}
                 <li><a href="/">Home</a></li>
                 <li><a href="/activity">My Activity</a></li>
-                <li><a href="/notifications">Notifications {{ if ne .User.UnreadNotifications 0 }}<span id="unreadNotifications">{{ .User.UnreadNotifications }}{{ end}}</span></a></li>
+                <li><a href="/notifications">Notifications {{ if ne .User.UnreadNotifications 0 }}<span class="unreadNotifications">{{ .User.UnreadNotifications }}{{ end }}</span></a></li>
+                {{ if eq .User.TypeInt 2 }}<li><a href="/admin">Admin {{ if ne .User.Admin.UnreadNotifications 0 }}<span class="unreadNotifications">{{ .User.Admin.UnreadNotifications }}{{ end }}</span></a></li>{{ end }}
                 <li><a href="/logout">Log Out</a></li>
                 {{ else }}
                 <li><a href="/register">Register</a></li>

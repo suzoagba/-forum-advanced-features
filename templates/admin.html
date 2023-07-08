@@ -1,0 +1,24 @@
+{{ define "content" }}
+<div class="container">
+  <p><a href="/" class="backButton"><< Back to main page</a></p>
+  <h2>Admin Notifications</h2>
+  {{ if eq .User.TypeInt 2 }}
+  {{ if eq 0 (len .User.Admin.Notifications) }}
+  <p>You have no notifications.</p>
+  {{ else }}
+  {{ range .User.Admin.Notifications }}
+  <p class="unread notification">
+    {{ if .Post }}
+    A <a href="/viewPost?id={{ .PostID }}">post</a> has been reported as unsuitable.
+    {{ end }}
+    {{ if .User }}
+    User <a href="/user?name={{ .Username }}">{{ .Username }}</a> has requested to become a moderator.
+    {{ end }}
+  </p>
+  {{ end }}
+  {{ end }}
+  {{ else }}
+  <p class="errorMessage">This page is not for you.</p>
+  {{ end }}
+</div>
+{{ end }}

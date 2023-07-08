@@ -216,7 +216,7 @@ button {
     border: 2px solid cyan;
 }
 
-#unreadNotifications {
+.unreadNotifications {
     vertical-align: super;
     font-weight: bold;
     color: white;
