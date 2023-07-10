@@ -13,8 +13,6 @@ import (
 
 func EditHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Println("[edit]", r.Method)
-
 		user := handlers.IsLoggedIn(r, db).User
 		type forPage struct {
 			structs.User
@@ -25,8 +23,6 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		if r.Method == http.MethodGet {
-			log.Println("[edit] get")
-
 			id := r.URL.Query().Get("id")
 			editType := r.URL.Query().Get("type")
 
@@ -34,7 +30,6 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 			var comment structs.Comment
 			if editType == "post" {
 				post, _ = GetPost(w, db, id)
-				log.Println(post.Username, user.Username)
 				if post.Username != user.Username {
 					handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users posts")
 					return
@@ -70,7 +65,6 @@ func EditHandler(db *sql.DB) http.HandlerFunc {
 				}
 
 				post, _ := GetPost(w, db, id)
-				log.Println(post.Username, user.Username)
 				if post.Username != user.Username {
 					handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to edit other users posts")
 					return

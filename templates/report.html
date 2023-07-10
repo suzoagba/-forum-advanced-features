@@ -1,0 +1,33 @@
+{{ define "content" }}
+<div class="container">
+  <p><a href="/" class="backButton"><< Back to main page</a></p>
+  {{ if and .User.LoggedIn (eq .User.TypeInt 1) }}
+  <div class="reportPost">
+    <h2>{{ .Post.Title }}</h2>
+    {{ if .Post.ImageFileName }}
+    <img class="postImage" src="../assets/uploads/{{ .Post.ImageFileName }}" alt="Post image">
+    {{ end }}
+    <p class="description">
+      {{ .Post.Description }}
+    </p>
+    <div class="reportPost">
+      <form action="/report/" method="POST">
+        <input type="hidden" name="id" value="{{ .Post.ID }}">
+        <input type="hidden" name="approved" value="false">
+        <label for="reason">&#128227; Report the post, because the post is</label>
+        <select id="reason" name="reason" required>
+          <option value="" disabled selected>Select a reason</option>
+          <option value="irrelevant">Irrelevant</option>
+          <option value="obscene">Obscene</option>
+          <option value="illegal">Illegal</option>
+          <option value="insulting">Insulting</option>
+          <input type="submit" value="Report it">
+        </select>
+      </form>
+    </div>
+  </div>
+  {{ else }}
+  <p class="errorMessage">You need to be a moderator to report.</p>
+  {{ end }}
+</div>
+{{ end }}

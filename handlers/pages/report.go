@@ -3,14 +3,42 @@ package pages
 import (
 	"database/sql"
 	"forum/handlers"
+	"forum/structs"
 	"net/http"
 )
 
 func ReportHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		user := handlers.IsLoggedIn(r, db).User
-		if r.Method != http.MethodPost || user.TypeInt != 1 {
-			http.Redirect(w, r, "/", http.StatusFound)
+		type forPage struct {
+			User  structs.User
+			Post  structs.Post
+			Error structs.ErrorMessage
+		}
+		if r.Method != http.MethodPost {
+			if user.TypeInt != 1 {
+				http.Redirect(w, r, "/", http.StatusFound)
+				return
+			} else {
+				id := r.URL.Query().Get("id")
+				rType := r.URL.Query().Get("type")
+				var post structs.Post
+				if rType == "post" {
+					post, _ = GetPost(w, db, id)
+					if user.TypeInt != 1 {
+						if user.TypeInt == 0 || (user.TypeInt == 1 && post.Approved) {
+							handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to delete other users posts")
+							return
+						}
+					}
+				}
+				data := forPage{
+					User: user,
+					Post: post,
+				}
+				handlers.RenderTemplates("report", data, w, r)
+				return
+			}
 		} else {
 			id := r.FormValue("id")
 			approved := r.FormValue("approved")
@@ -59,7 +87,7 @@ func storeReport(db *sql.DB, postID string, reason string) error {
 
 	updateQuery := `
 		UPDATE posts
-		SET reported = true, report_reason = ?
+		SET approved = false, reported = true, report_reason = ?
 		WHERE postID = ?
 	`
 	_, err = db.Exec(updateQuery, reason, postID)

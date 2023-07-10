@@ -96,6 +96,30 @@ At page 'My Activity' the user can track their own activity:
 
 The user can Edit/Remove their posts and comments.
 
+### Moderation
+
+The forum moderation is based on a moderation system. It presents a moderator that, depending on the access level of a user, 
+approves posted messages before they become publicly visible.
+
+The filtering can be done depending on the categories of the post being sorted by irrelevant, obscene, illegal or insulting.
+
+There are a total of 4 types of users:
+- Guests
+  - These are unregistered-users that can neither post, comment, like nor dislike a post. 
+  They only have the permission to see those posts, comments, likes or dislikes.
+- Users
+  - These are the users that will be able to create, comment, like or dislike posts.
+- Moderators
+  - Moderators, as explained above, are users that have a granted access to special functions:
+    - They are able to monitor the content in the forum by deleting or reporting post to the admin.
+  - To create a moderator the user should request an admin for that role.
+- Administrators
+  - Users that manage the technical details required for running the forum. This user is able to:
+    - Promote or demote a normal user to, or from a moderator user.
+    - Receive reports from moderators. If the admin receives a report from a moderator, he can respond to that report.
+    - Delete posts and comments
+    - Manage the categories, by being able to create and delete them.
+
 ### Docker
 
 For the forum project Docker is used.
@@ -120,7 +144,9 @@ No frontend libraries or frameworks like React, Angular, Vue etc. have been used
 
 ### Audit
 
-Questions can be found [here](https://github.com/01-edu/public/blob/master/subjects/forum/advanced-features/audit.md).
+Questions can be found:
+- [Advanced Features](https://github.com/01-edu/public/blob/master/subjects/forum/advanced-features/audit.md).
+- [Moderation](https://github.com/01-edu/public/blob/master/subjects/forum/moderation/audit.md).
 
 ## Developers
 - Willem Kuningas / *thinkpad*

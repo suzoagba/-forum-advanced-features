@@ -40,15 +40,19 @@ func DeleteHandler(db *sql.DB) http.HandlerFunc {
 		var comment structs.Comment
 		if editType == "post" {
 			post, _ = GetPost(w, db, id)
-			if post.Username != user.Username {
-				handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to delete other users posts")
-				return
+			if user.TypeInt == 0 {
+				if post.Username != user.Username {
+					handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to delete other users posts")
+					return
+				}
 			}
 		} else if editType == "comment" {
 			comment, _ = GetComment(w, db, id)
-			if comment.Username != user.Username {
-				handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to delete other users comments")
-				return
+			if user.TypeInt != 2 {
+				if comment.Username != user.Username {
+					handlers.ErrorHandler(w, http.StatusUnauthorized, "You are not allowed to delete other users comments")
+					return
+				}
 			}
 		}
 		if r.Method == http.MethodGet {
