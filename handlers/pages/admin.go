@@ -2,6 +2,7 @@ package pages
 
 import (
 	"database/sql"
+	"forum/database"
 	"forum/handlers"
 	"forum/structs"
 	"log"
@@ -14,6 +15,7 @@ func AdminHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		forPage := structs.ForPage{}
 		forPage.User = handlers.IsLoggedIn(r, db).User
+		forPage.Tags = database.Tags
 
 		if forPage.User.TypeInt != 2 {
 			http.Redirect(w, r, "/", http.StatusFound)
@@ -53,11 +55,33 @@ func AdminHandler(db *sql.DB) http.HandlerFunc {
 				err = deleteAdminNotification(db, false, id)
 				http.Redirect(w, r, "/user?name="+name, http.StatusFound)
 				return
+			} else if page == "tag" {
+				action := r.FormValue("action")
+				if action == "delete" {
+					id := r.FormValue("id")
+					posts, err := database.DeleteTag(db, id)
+					if len(posts) > 0 {
+						forPage.Error.Error = true
+						forPage.Error.Field2, err = database.GetTagNameByID(db, id)
+						forPage.Error.Field3 = posts
+					} else if err != nil {
+						http.Error(w, err.Error(), http.StatusInternalServerError)
+						return
+					}
+				} else if action == "add" {
+					name := r.FormValue("name")
+					err := database.AddTag(db, name)
+					if err != nil {
+						http.Error(w, err.Error(), http.StatusInternalServerError)
+						return
+					}
+				}
 			}
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 			forPage.User = handlers.IsLoggedIn(r, db).User
+			forPage.Tags = database.Tags
 			handlers.RenderTemplates("admin", forPage, w, r)
 			return
 		}

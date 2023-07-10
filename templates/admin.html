@@ -17,6 +17,32 @@
   </p>
   {{ end }}
   {{ end }}
+  <h2>Category Administration</h2>
+  {{ if .Error.Error }}
+  <p>Category '{{ .Error.Field2 }}' cannot be deleted, because this/these post(s) is/are posted only under this category:</p>
+  <ul>
+    {{ range .Error.Field3 }}
+    <li><a href="/viewPost?id={{ . }}">Post</a></li>
+    {{ end }}
+  </ul>
+  {{ end }}
+  {{ range .Tags }}
+  <div class="category">
+    <form action="/admin/tag" method="POST">
+      <input type="hidden" name="id" value="{{ .ID }}">
+      <input type="hidden" name="action" value="delete">
+      {{ .Name }}
+      <input type="submit" value="Delete">
+    </form>
+  </div>
+  {{ end }}
+  <div class="category">
+    <form action="/admin/tag" method="POST">
+      <input type="text" name="name" maxlength="20" required>
+      <input type="hidden" name="action" value="add">
+      <input type="submit" value="Add">
+    </form>
+  </div>
   {{ else }}
   <p class="errorMessage">This page is not for you.</p>
   {{ end }}
