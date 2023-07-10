@@ -109,11 +109,11 @@ There are a total of 4 types of users:
   They only have the permission to see those posts, comments, likes or dislikes.
 - Users
   - These are the users that will be able to create, comment, like or dislike posts.
-- Moderators
+- Moderators (user: `user`, password: `psw`)
   - Moderators, as explained above, are users that have a granted access to special functions:
     - They are able to monitor the content in the forum by deleting or reporting post to the admin.
   - To create a moderator the user should request an admin for that role.
-- Administrators
+- Administrators (user: `admin`, password: `psw`)
   - Users that manage the technical details required for running the forum. This user is able to:
     - Promote or demote a normal user to, or from a moderator user.
     - Receive reports from moderators. If the admin receives a report from a moderator, he can respond to that report.
