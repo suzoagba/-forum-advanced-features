@@ -5,7 +5,6 @@ import (
 	"forum/database"
 	"forum/handlers"
 	"forum/structs"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -16,6 +15,7 @@ func AdminHandler(db *sql.DB) http.HandlerFunc {
 		forPage := structs.ForPage{}
 		forPage.User = handlers.IsLoggedIn(r, db).User
 		forPage.Tags = database.Tags
+		forPage.User.Admin.ApprovalNeeded = ApprovalNeeded
 
 		if forPage.User.TypeInt != 2 {
 			http.Redirect(w, r, "/", http.StatusFound)
@@ -76,12 +76,21 @@ func AdminHandler(db *sql.DB) http.HandlerFunc {
 						return
 					}
 				}
+			} else if page == "mode" {
+				moderation := r.FormValue("moderation")
+				if moderation == "true" {
+					ApprovalNeeded = true
+				} else {
+					ApprovalNeeded = false
+				}
 			}
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 			forPage.User = handlers.IsLoggedIn(r, db).User
 			forPage.Tags = database.Tags
+			forPage.User.Admin.Notifications, err = getAdminNotifications(db)
+			forPage.User.Admin.ApprovalNeeded = ApprovalNeeded
 			handlers.RenderTemplates("admin", forPage, w, r)
 			return
 		}
@@ -103,7 +112,6 @@ func getAdminNotifications(db *sql.DB) ([]structs.AdminNotification, error) {
 	var postID sql.NullString
 	var userID sql.NullString
 	for rows.Next() {
-		log.Println("next")
 		var notification structs.AdminNotification
 		err := rows.Scan(
 			&notification.ID,
@@ -115,7 +123,6 @@ func getAdminNotifications(db *sql.DB) ([]structs.AdminNotification, error) {
 		if err != nil {
 			return nil, err
 		}
-		log.Println(notification)
 
 		if postID.Valid {
 			notification.PostID, _ = strconv.Atoi(postID.String)
@@ -140,7 +147,6 @@ func getAdminNotifications(db *sql.DB) ([]structs.AdminNotification, error) {
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
-	log.Println(notifications)
 
 	/*	err = MarkNotificationsAsRead(db, userID)
 

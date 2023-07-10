@@ -19,8 +19,17 @@ func NotifyHandler(db *sql.DB) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
+			if forPage.User.TypeInt == 1 {
+				posts, err := handlers.GetModeratorPosts(db)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				forPage.User.Moderator.Notifications = posts
+			}
 
 			handlers.RenderTemplates("notify", forPage, w, r)
+			return
 		}
 	}
 }

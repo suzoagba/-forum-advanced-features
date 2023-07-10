@@ -1,6 +1,16 @@
 {{ define "content" }}
 <div class="container">
   <p><a href="/" class="backButton"><< Back to main page</a></p>
+  {{ if eq .User.TypeInt 1 }}
+  <h2>Moderator Notifications</h2>
+  {{ if eq 0 (len .User.Moderator.Notifications) }}
+  <p>You have no notifications.</p>
+  {{ else }}
+  {{ range .User.Moderator.Notifications }}
+  <p class="unread notification"><a href="/user?name={{ .Username }}">{{ .Username }}</a> has made a new <a href="/viewPost?id={{ .ID }}">post</a> that is waiting for your approval.</p>
+  {{ end }}
+  {{ end }}
+  {{ end }}
   <h2>Notifications</h2>
   {{ if .User.LoggedIn }}
   {{ if eq 0 (len .Notifications) }}

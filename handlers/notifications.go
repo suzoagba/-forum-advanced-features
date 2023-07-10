@@ -105,7 +105,7 @@ func GetUserNotifications(db *sql.DB, userID string) ([]structs.Notification, er
 	return notifications, nil
 }
 
-func GetUnreadNotificationCount(db *sql.DB, userID string) (int, error) {
+func GetUnreadNotificationCount(db *sql.DB, userID string, level int) (int, error) {
 	query := `
 		SELECT COUNT(*) FROM notifications
 		WHERE userID = ? AND isRead = false
@@ -115,6 +115,16 @@ func GetUnreadNotificationCount(db *sql.DB, userID string) (int, error) {
 	err := db.QueryRow(query, userID).Scan(&count)
 	if err != nil {
 		return 0, err
+	}
+
+	if level == 1 {
+		mode, err := GetModeratorNotificationCount(db)
+
+		if err != nil {
+			return 0, err
+		}
+
+		count += mode
 	}
 
 	return count, nil
@@ -199,4 +209,50 @@ func GetAdminNotificationCount(db *sql.DB) (int, error) {
 	}
 
 	return count, nil
+}
+
+func GetModeratorNotificationCount(db *sql.DB) (int, error) {
+	query := "SELECT COUNT(*) FROM posts WHERE approved = false AND reported = false"
+
+	var count int
+	err := db.QueryRow(query).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func GetModeratorPosts(db *sql.DB) ([]structs.AdminNotification, error) {
+	query := `
+		SELECT p.postID, u.username
+		FROM posts p
+		JOIN users u ON p.username = u.username
+		WHERE p.approved = false AND p.reported = false
+	`
+
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var posts []structs.AdminNotification
+
+	for rows.Next() {
+		var post structs.AdminNotification
+
+		err := rows.Scan(&post.ID, &post.Username)
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, post)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return posts, nil
 }

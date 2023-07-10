@@ -43,6 +43,17 @@
       <input type="submit" value="Add">
     </form>
   </div>
+  <h2>Moderation Administration</h2>
+  <div class="moderationApproval">
+    <form action="/admin/mode" method="POST">
+      <label for="moderation">New post Moderator approval is:</label>
+      <select id="moderation" name="moderation" required>
+        <option value="false"{{ if not .User.Admin.ApprovalNeeded }} selected{{ end }}>OFF</option>
+        <option value="true"{{ if .User.Admin.ApprovalNeeded }} selected{{ end }}>ON</option>
+        <input type="submit" value="Change">
+      </select>
+    </form>
+  </div>
   {{ else }}
   <p class="errorMessage">This page is not for you.</p>
   {{ end }}

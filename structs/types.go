@@ -39,6 +39,7 @@ type User struct {
 	UnreadNotifications int
 	PromotionRequest    bool
 	Admin               Admin
+	Moderator           Admin
 }
 
 type UserInfo struct {
@@ -68,9 +69,11 @@ type CommentListing struct {
 	Post     Post
 	Comments []Comment
 }
+
 type Admin struct {
 	UnreadNotifications int
 	Notifications       []AdminNotification
+	ApprovalNeeded      bool
 }
 
 type AdminNotification struct {

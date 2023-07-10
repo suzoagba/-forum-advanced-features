@@ -65,7 +65,7 @@ func IsLoggedIn(r *http.Request, db *sql.DB) userInfo {
 		info.User.LoggedIn = false
 		return info
 	}
-	info.User.UnreadNotifications, err = GetUnreadNotificationCount(db, uuid)
+	info.User.UnreadNotifications, err = GetUnreadNotificationCount(db, uuid, info.User.TypeInt)
 	if err != nil {
 		info.User.LoggedIn = false
 		return info
