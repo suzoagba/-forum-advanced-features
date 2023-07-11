@@ -150,3 +150,4 @@ Questions can be found:
 
 ## Developers
 - Willem Kuningas / *thinkpad*
+- Samuel Uzoagba / *suzoagba*
