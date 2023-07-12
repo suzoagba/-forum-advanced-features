@@ -78,7 +78,7 @@ Redirect URI-s are:
 - Google: `http://localhost:8080/oauth/google`
 - GitHub: `http://localhost:8080/oauth/github`
 
-Input your `client ID`-s and `secrets` to `oauth/clientInfo.go`.
+<!-- Input your `client ID`-s and `secrets` to `oauth/clientInfo.go`. -->
 
 If you log in via Google or GitHub and a user is already registered by the same email, the previously registered
 username will be used. Otherwise, the username will be based on your email.
@@ -144,7 +144,7 @@ No frontend libraries or frameworks like React, Angular, Vue etc. have been used
 
 ### Audit
 
-Questions can be found:
+Questions can be found [here]:
 - [Advanced Features](https://github.com/01-edu/public/blob/master/subjects/forum/advanced-features/audit.md).
 - [Moderation](https://github.com/01-edu/public/blob/master/subjects/forum/moderation/audit.md).
 
